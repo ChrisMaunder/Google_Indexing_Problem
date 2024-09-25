@@ -14,7 +14,7 @@ Google has a nice system that allows you to check up on what they are indexing a
 
 As the days went by after the upgrade we saw this number of not founds diminish rapidly and this was a Good Thing. There was, however, one page that was being reported as missing that really stumped us: www.codeproject.com 
 
-![](https://raw.githubusercontent.com/ChrisMaunder/Google_Indexing_Problem/master/docs/assets/NotFound.PNG) 
+![](https://raw.githubusercontent.com/ChrisMaunder/Google_Indexing_Problem/master/docs/assets/notfound.png) 
 
 We looked everywhere. On the servers, on our test machines, under the couch. Everywhere we looked we *could* see the homepage. Our old index.asp was being sent to the new index.aspx correctly. Our default document was set correctly so that www.codeproject.com would go to www.codeproject.com/index.aspx. We tried accessing the homepage via proxies, via raw HTTP clients, via web-based screen captures. We even checked our logs and clearly the homepage was not missing, yet Google was reporting a 404 error. 
 
@@ -22,7 +22,7 @@ One thought we has was that the page was being served correctly for Human Beings
 
 We considered that we had been black-banned. We have the domains codeproject.com, www.codeproject.com, http://www.thecodeproject.com and others and, for convenience, point them to the same content. This is (now) an absolute no-no so we feared that our inadvertent convenience had caused a problem. We removed the automatic redirect from these alternate domains (much to many's discontent) and knew that if we had been banned it could be weeks before we saw any improvement.
 
-We then considered that maybe Google was unable to actually get to our servers because of network issues. However, every so often a new version of a page would pop up on Google so clearly they were seeing us. We were also seeing Googlebot appearing in our logs so they were here. 
+We then considered that maybe Google was unable to actually get to our servers because of network issues. However, every so often a new version of one of the others pages would pop up on Google, so clearly Google was seeing us. We were also seeing Googlebot appearing in our logs so they were here. 
 
 We did see that one page was consistently and embarrasingly being indexed. It was our error page. A simple, no fuss "oops, we have a problem" page. 
 
@@ -38,7 +38,7 @@ An aside: If you run an ASP.NET site then do yourself a favour and do some readi
 
 ## So what was going on?
 
-Yahoo could see us. Everyone else could see us. Google could get to us. The pages were being served correctly. Yet Google was reporting our homepage as 404 Not Found. 
+Yahoo could see our homepage. Everyone else could see our homepage. Google could get to every page *but* our homepage. Pages were being served correctly, yet Google was reporting our homepage as 404 Not Found. 
 
 Back in October 2007 I made a small change to our meta tags. Originally they were in the form
 
@@ -67,8 +67,7 @@ To specify whether your HTML page is HTML or XHTML you provide a `DOCTYPE `decla
 for HTML 4.01, or 
 
 ```cpp
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 ```
 
 for strict adherence to the XHTML format. 
@@ -85,7 +84,7 @@ Our custom error page had no meta tags so it was fine. Our article about templat
 
 We removed the "/"s from the meta tags and within 24hrs we were reindexed. 
 
-## Another Problem
+## All fixed? Almost...
 
 We thought we had solved the issue. Our homepage had been found and we were getting some Google love again. Unfortunately our articles were not being found.
 
@@ -95,7 +94,7 @@ The issue turned out to be a related problem: We included javascript that was of
 document.write("<tag value=...
 ```
 
-The problem here is that Googebot seemed to be having problems with this. We assumed Googlebot would ignore the javascript but a search engine trying to stop page hijacking and scams cannot afford to ignore javascript. The specific problem was that the open "&lt;" was messing the parser so again a quick solution:
+The problem here is that Googebot seemed to be having problems with this. We assumed Googlebot would ignore the javascript, but a search engine that is trying to stop page hijacking and SEO scams cannot afford to ignore javascript. The specific problem was that the open "&lt;" was messing the parser so again a quick solution:
 
 ```cpp
 document.write(unescape("%3Ctag value=...
